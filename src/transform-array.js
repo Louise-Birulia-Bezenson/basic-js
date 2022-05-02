@@ -13,9 +13,45 @@ const { NotImplementedError } = require('../extensions/index.js');
  * transform([1, 2, 3, '--discard-prev', 4, 5]) => [1, 2, 4, 5]
  * 
  */
-function transform(/* arr */) {
-  throw new NotImplementedError('Not implemented');
-  // remove line with error and write your code here
+
+
+
+
+function transform(arr) {
+  if (!Array.isArray(arr)) {
+    throw new Error(`'arr' parameter must be an instance of the Array!`);
+  }
+
+  let arrCopy = arr.slice();
+  let resultarr = []; 
+
+  for (let i = 0; i < arrCopy.length; i++) {
+    let current = arrCopy[i];
+    if (current === '--double-next') {
+      resultarr.push(arrCopy[i + 1]);
+      continue;
+    }
+    if (current === '--double-prev') {
+      if (i > 0 && typeof arrCopy[i - 1] !== 'undefined') {
+        resultarr.push(arrCopy[i - 1]);
+      }
+      continue;
+    }
+    if (current === "--discard-prev") {
+      if (i > 0) {
+        resultarr[i - 1] = undefined;
+      }
+      continue;
+    }
+    if (current === "--discard-next") {
+      arrCopy[i + 1] = undefined;
+      continue;
+    }
+
+    resultarr.push(arrCopy[i]);
+  }
+
+  return resultarr.filter(item => typeof item !== 'undefined');
 }
 
 module.exports = {
